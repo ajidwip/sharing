@@ -1,1 +1,1 @@
-
+="SELECT '" & A2 & "' AS CompanyID, '" & B2 & "' AS Code, '" & C2 & "' AS Description, '" & D2 & "' AS Category, '" & E2 & "' AS IsVariableApp, '" & F2 & "' AS IsBulk, '" & G2 & "' AS GroupCode, '" & H2 & "' AS IsNeedAttachment, '" & I2 & "' AS Bulk FROM TableName" & IF(ROW()<COUNTA(A:A)+1," UNION","")
