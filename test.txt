@@ -1,1 +1,19 @@
 ="SELECT '" & A2 & "' AS CompanyID, '" & B2 & "' AS Code, '" & C2 & "' AS Description, '" & D2 & "' AS Category, '" & E2 & "' AS IsVariableApp, '" & F2 & "' AS IsBulk, '" & G2 & "' AS GroupCode, '" & H2 & "' AS IsNeedAttachment, '" & I2 & "' AS Bulk FROM TableName UNION"
+
+
+
+CREATE TABLE mstTransactionType (
+    ID UNIQUEIDENTIFIER PRIMARY KEY,
+    CompanyID VARCHAR(10),
+    Code VARCHAR(10),
+    Description VARCHAR(100),
+    Category VARCHAR(20),
+    IsTaxable BIT,
+    IsNeedAttachment BIT,
+    IsBulk BIT,
+    DeptCode VARCHAR(10),
+    TransactionTypeCode VARCHAR(20),
+    LimitType VARCHAR(10),
+    COA VARCHAR(50),
+    LimitAmount DECIMAL(18,2)
+);
