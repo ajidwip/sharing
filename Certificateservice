@@ -1,0 +1,202 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
+
+public class CertificateService
+{
+    private readonly SQLAccess _odal;
+
+    public CertificateService()
+    {
+        _odal = new SQLAccess("iclipscs");
+    }
+
+    public bool SaveNewCertificate(
+        bool pUseExistingInsuredID,
+        bool pUseExistingDebiturID,
+        ref cCertificate pocer,
+        cCertificateAgent oagt,
+        List<cCertificateBeneficiary> loben,
+        List<cCertificateQuestioner> loque,
+        List<cCertificateCoverage> locov,
+        List<cPolicyHistory> loPolH,
+        List<cPolicyHistory> loPolC,
+        List<cDocument> lodoc,
+        string pMode = "N")
+    {
+        try
+        {
+            _odal.BeginTransactions();
+
+            _odal.ExecuteCommandSP("usp_save_tcertificate",
+                _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                _odal.CreateParameter("@CompanyID", SqlDbType.VarChar, pocer.CompanyID),
+                _odal.CreateParameter("@PolicyID", SqlDbType.VarChar, pocer.PolicyID),
+                _odal.CreateParameter("@MemberID", SqlDbType.VarChar, pocer.MemberID, 20, ParameterDirection.InputOutput),
+                _odal.CreateParameter("@CertificateID", SqlDbType.VarChar, pocer.CertificateID, 20, ParameterDirection.InputOutput),
+                _odal.CreateParameter("@InsuredID", SqlDbType.VarChar, pocer.InsuredID),
+                _odal.CreateParameter("@InsuredName", SqlDbType.VarChar, pocer.InsuredName),
+                _odal.CreateParameter("@InsuredDOB", SqlDbType.DateTime, pocer.InsuredDOB),
+                _odal.CreateParameter("@InsuredSex", SqlDbType.VarChar, pocer.InsuredSex),
+                _odal.CreateParameter("@DebiturID", SqlDbType.VarChar, pocer.DebiturID),
+                _odal.CreateParameter("@DebiturName", SqlDbType.VarChar, pocer.DebiturName),
+                _odal.CreateParameter("@DebiturDOB", SqlDbType.DateTime, pocer.DebiturDOB),
+                _odal.CreateParameter("@DebiturSex", SqlDbType.VarChar, pocer.DebiturSex),
+                _odal.CreateParameter("@CorrespondenceAddress", SqlDbType.VarChar, pocer.CorrespondenceAddress),
+                _odal.CreateParameter("@JoinIncome", SqlDbType.Bit, pocer.JoinIncome),
+                _odal.CreateParameter("@JoinCertificateID", SqlDbType.VarChar, pocer.JoinCertificateID),
+                _odal.CreateParameter("@ApplicationNo", SqlDbType.VarChar, pocer.ApplicationNo),
+                _odal.CreateParameter("@AgreementNo", SqlDbType.VarChar, pocer.AgreementNo),
+                _odal.CreateParameter("@BillingMode", SqlDbType.VarChar, pocer.BillingMode),
+                _odal.CreateParameter("@CurrencyID", SqlDbType.VarChar, pocer.CurrencyID),
+                _odal.CreateParameter("@AppReceiveDate", SqlDbType.DateTime, pocer.AppReceiveDate),
+                _odal.CreateParameter("@EffectiveDate", SqlDbType.DateTime, pocer.EffectiveDate),
+                _odal.CreateParameter("@ProductPackageID", SqlDbType.VarChar, pocer.ProductPackageID),
+                _odal.CreateParameter("@MonthlyInstallment", SqlDbType.Float, pocer.MonthlyInstallment),
+                _odal.CreateParameter("@LoanDuration", SqlDbType.Int, pocer.LoanDuration),
+                _odal.CreateParameter("@LoanMaturityDate", SqlDbType.DateTime, pocer.LoanMaturityDate),
+                _odal.CreateParameter("@LoanInterestRate", SqlDbType.Float, pocer.LoanInterestRate),
+                _odal.CreateParameter("@SalaryIncome", SqlDbType.VarChar, pocer.SalaryIncome),
+                _odal.CreateParameter("@SpouseIncome", SqlDbType.VarChar, pocer.SpouseIncome),
+                _odal.CreateParameter("@InvestmentIncome", SqlDbType.VarChar, pocer.InvestmentIncome),
+                _odal.CreateParameter("@BusinessIncome", SqlDbType.VarChar, pocer.BusinessIncome),
+                _odal.CreateParameter("@OtherIncome", SqlDbType.Float, pocer.OtherIncome),
+                _odal.CreateParameter("@AnnualNetIncome", SqlDbType.Float, pocer.AnnualNetIncome),
+                _odal.CreateParameter("@DependentNumber", SqlDbType.VarChar, pocer.DependentNumber),
+                _odal.CreateParameter("@Remark", SqlDbType.VarChar, pocer.Remark),
+                _odal.CreateParameter("@BasePlan", SqlDbType.VarChar, pocer.BasePlan),
+                _odal.CreateParameter("@InsuredHeight", SqlDbType.Decimal, pocer.InsuredHeight),
+                _odal.CreateParameter("@InsuredWeight", SqlDbType.Decimal, pocer.InsuredWeight),
+                _odal.CreateParameter("@BMIRate", SqlDbType.Decimal, pocer.BMIRate),
+                _odal.CreateParameter("@BMIHRisk", SqlDbType.VarChar, pocer.BMIHRisk),
+                _odal.CreateParameter("@ApplicationSignDate", SqlDbType.DateTime, pocer.ApplicationSignDate),
+                _odal.CreateParameter("@SmokerID", SqlDbType.VarChar, pocer.SmokerID),
+                _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy),
+                _odal.CreateParameter("@InforceDate", SqlDbType.DateTime, pocer.InforceDate),
+                _odal.CreateParameter("@PrevPolicyID", SqlDbType.VarChar, pocer.PrevCertificateID),
+                _odal.CreateParameter("@PrevSurrAmt", SqlDbType.VarChar, pocer.PrevSurrAmt),
+                _odal.CreateParameter("@IsUWPending", SqlDbType.Bit, pocer.HasUWPending)
+            );
+
+            pocer.MemberID = common.GetText(_odal.ReturnValue(1));
+
+            // AGENT
+            _odal.ExecuteCommandSP("usp_save_tcertificate_agent",
+                _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                _odal.CreateParameter("@AgentID", SqlDbType.VarChar, oagt.AgentID),
+                _odal.CreateParameter("@BranchID", SqlDbType.VarChar, oagt.BranchID),
+                _odal.CreateParameter("@CommSharing", SqlDbType.Float, oagt.CommSharing),
+                _odal.CreateParameter("@CaseSharing", SqlDbType.Float, oagt.CaseSharing),
+                _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+            );
+
+            // BENEFICIARY
+            foreach (var oben in loben)
+            {
+                _odal.ExecuteCommandSP("usp_save_tcertificate_beneficiary",
+                    _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                    _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                    _odal.CreateParameter("@BeneficiaryName", SqlDbType.VarChar, oben.BeneficiaryName),
+                    _odal.CreateParameter("@BeneficiarySex", SqlDbType.VarChar, oben.BeneficiarySex),
+                    _odal.CreateParameter("@BeneficiaryPOB", SqlDbType.VarChar, oben.BeneficiaryPOB),
+                    _odal.CreateParameter("@BeneficiaryDOB", SqlDbType.DateTime, oben.BeneficiaryDOB),
+                    _odal.CreateParameter("@BeneficiaryRelationship", SqlDbType.VarChar, oben.BeneficiaryRelationship),
+                    _odal.CreateParameter("@BeneficiarySharing", SqlDbType.Float, oben.BeneficiarySharing),
+                    _odal.CreateParameter("@Nationality", SqlDbType.VarChar, oben.Nationality),
+                    _odal.CreateParameter("@TrusteeInfo", SqlDbType.VarChar, oben.TrusteeInfo),
+                    _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+                );
+            }
+
+            // COVERAGE
+            foreach (var ocov in locov)
+            {
+                _odal.ExecuteCommandSP("usp_save_tcertificate_coverage",
+                    _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                    _odal.CreateParameter("CertificateCoverageID", SqlDbType.Int, ocov.CertificateCoverageID),
+                    _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                    _odal.CreateParameter("@PlanID", SqlDbType.VarChar, ocov.PlanID),
+                    _odal.CreateParameter("@EffectiveDate", SqlDbType.DateTime, ocov.EffectiveDate),
+                    _odal.CreateParameter("@CoverageDuration", SqlDbType.Int, ocov.CoverageDuration),
+                    _odal.CreateParameter("@CoverageUnit", SqlDbType.VarChar, ocov.CoverageUnit),
+                    _odal.CreateParameter("@CoverageMaturity", SqlDbType.DateTime, ocov.CoverageMaturity),
+                    _odal.CreateParameter("@FaceAmount", SqlDbType.Float, ocov.FaceAmount),
+                    _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+                );
+            }
+
+            // QUESTIONER
+            foreach (var oque in loque)
+            {
+                _odal.ExecuteCommandSP("usp_save_tcertificate_questioner",
+                    _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                    _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                    _odal.CreateParameter("@QuestionerID", SqlDbType.Int, oque.QuestionerID),
+                    _odal.CreateParameter("@Answer", SqlDbType.Bit, oque.Answer),
+                    _odal.CreateParameter("@Explanation", SqlDbType.VarChar, oque.Explanation),
+                    _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+                );
+            }
+
+            // POLICY HISTORY
+            foreach (var opolh in loPolH)
+            {
+                _odal.ExecuteCommandSP("usp_save_tcertificate_pre_policy",
+                    _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                    _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                    _odal.CreateParameter("@CompanyName", SqlDbType.VarChar, opolh.CompanyName),
+                    _odal.CreateParameter("@ProductName", SqlDbType.VarChar, opolh.ProductType),
+                    _odal.CreateParameter("@SumInsured", SqlDbType.Float, opolh.FaceAmount),
+                    _odal.CreateParameter("@IssueDate", SqlDbType.Date, opolh.EffectiveDate),
+                    _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+                );
+            }
+
+            foreach (var opolh in loPolC)
+            {
+                _odal.ExecuteCommandSP("usp_save_tcertificate_pre_claim",
+                    _odal.CreateParameter("@SaveMode", SqlDbType.VarChar, pMode),
+                    _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                    _odal.CreateParameter("@CompanyName", SqlDbType.VarChar, opolh.CompanyName),
+                    _odal.CreateParameter("@ProductName", SqlDbType.VarChar, opolh.ProductType),
+                    _odal.CreateParameter("@SumInsured", SqlDbType.Float, opolh.FaceAmount),
+                    _odal.CreateParameter("@IssueDate", SqlDbType.Date, opolh.EffectiveDate),
+                    _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+                );
+            }
+
+            // DOCUMENT
+            foreach (var oDoc in lodoc)
+            {
+                _odal.ExecuteCommandSP("usp_save_tcertificate_document",
+                    _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                    _odal.CreateParameter("@IsCompleted", SqlDbType.VarChar, oDoc.IsComplete),
+                    _odal.CreateParameter("@DocumentID", SqlDbType.VarChar, oDoc.DocumentID),
+                    _odal.CreateParameter("@DocumentPath", SqlDbType.VarChar, oDoc.DocumentPath),
+                    _odal.CreateParameter("@DocumentFile", SqlDbType.VarChar, oDoc.DocumentFileName),
+                    _odal.CreateParameter("@CompletedDate", SqlDbType.Date, oDoc.DocumentCompletedDate),
+                    _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar,
+                        string.IsNullOrEmpty(oDoc.DocumentFileName) ? "" : pocer.UpdatedBy)
+                );
+            }
+
+            _odal.ExecuteCommandSP("usp_update_previous_policy",
+                _odal.CreateParameter("@MemberID", SqlDbType.Int, pocer.MemberID),
+                _odal.CreateParameter("@InsuredID", SqlDbType.VarChar, pocer.InsuredID),
+                _odal.CreateParameter("@CurrencyID", SqlDbType.VarChar, pocer.CurrencyID),
+                _odal.CreateParameter("@PolicyID", SqlDbType.VarChar, pocer.PolicyID),
+                _odal.CreateParameter("@ProcessBy", SqlDbType.VarChar, pocer.UpdatedBy)
+            );
+
+            _odal.CommitTransactions();
+            return true;
+        }
+        catch (Exception)
+        {
+            _odal.RollBackTransactions();
+            throw;
+        }
+    }
+}
