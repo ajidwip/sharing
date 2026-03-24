@@ -1,0 +1,50 @@
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api/[controller]")]
+public class CertificateController : ControllerBase
+{
+    private readonly CertificateService _service;
+
+    public CertificateController()
+    {
+        _service = new CertificateService();
+    }
+
+    [HttpPost("save")]
+    public IActionResult SaveCertificate([FromBody] SaveCertificateRequest request)
+    {
+        try
+        {
+            var pocer = request.pocer;
+
+            var result = _service.SaveNewCertificate(
+                request.pUseExistingInsuredID,
+                request.pUseExistingDebiturID,
+                ref pocer,
+                request.oagt,
+                request.loben,
+                request.loque,
+                request.locov,
+                request.loPolH,
+                request.loPolC,
+                request.lodoc,
+                request.pMode
+            );
+
+            return Ok(new
+            {
+                success = result,
+                memberId = pocer.MemberID
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
+    }
+}
