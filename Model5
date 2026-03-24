@@ -1,0 +1,181 @@
+using System;
+
+public class cCertificate
+{
+    public string CompanyID { get; set; }
+    public int MemberID { get; set; }
+    public string PolicyID { get; set; }
+    public string CertificateID { get; set; }
+    public string CertificateStatus { get; set; }
+    public string UnderwritingStatus { get; set; }
+    public bool HasAdminPending { get; set; }
+    public bool HasUWPending { get; set; }
+    public string InsuredID { get; set; }
+    public string AlternateID { get; set; }
+    public string InsuredName { get; set; }
+    public DateTime InsuredDOB { get; set; }
+    public string InsuredSex { get; set; }
+    public int InsuredAge { get; set; }
+    public string DebiturID { get; set; }
+    public string DebiturName { get; set; }
+    public DateTime DebiturDOB { get; set; }
+    public string DebiturSex { get; set; }
+    public int DebiturAge { get; set; }
+    public string CorrespondenceAddress { get; set; }
+    public bool JoinIncome { get; set; }
+    public string JoinCertificateID { get; set; }
+    public string ApplicationNo { get; set; }
+    public string AgreementNo { get; set; }
+    public string ContractID { get; set; }
+    public string BillingMode { get; set; }
+    public string CurrencyID { get; set; }
+    public DateTime AppReceiveDate { get; set; }
+    public DateTime EffectiveDate { get; set; }
+    public DateTime InforceDate { get; set; }
+    public string InforceBy { get; set; }
+    public DateTime ApproveDate { get; set; }
+    public string ApproveBy { get; set; }
+    public DateTime TerminateDate { get; set; }
+    public string TerminateBy { get; set; }
+    public string MedicalType { get; set; }
+    public string ProductPackageID { get; set; }
+    public string BasePlan { get; set; }
+    public DateTime BillToDate { get; set; }
+    public DateTime PaidToDate { get; set; }
+    public double MonthlyInstallment { get; set; }
+    public int LoanDuration { get; set; }
+    public DateTime LoanMaturityDate { get; set; }
+    public double LoanInterestRate { get; set; }
+    public string SalaryIncome { get; set; }
+    public string SpouseIncome { get; set; }
+    public string InvestmentIncome { get; set; }
+    public string BusinessIncome { get; set; }
+    public double OtherIncome { get; set; }
+    public double AnnualNetIncome { get; set; }
+    public int DependentNumber { get; set; }
+    public string Remark { get; set; }
+    public double TwoYearsSAR { get; set; }
+    public double TotalSAR { get; set; }
+    public double PremiumAmount { get; set; }
+    public double PremiumNettAmount { get; set; }
+    public double PremiumTaxAmount { get; set; }
+    public double PremiumTaxRate { get; set; }
+    public double IRACommission { get; set; }
+    public decimal InsuredHeight { get; set; }
+    public decimal InsuredWeight { get; set; }
+    public decimal BMIRate { get; set; }
+    public string BMIHRisk { get; set; }
+    public DateTime ApplicationSignDate { get; set; }
+    public string ProductPackageName { get; set; }
+    public string SmokerID { get; set; }
+    public double ExtPremAmount { get; set; }
+    public double ExtPremAmountNett { get; set; }
+    public string ExtMortalityRating { get; set; }
+    public double TotalPremiunAmount { get; set; }
+    public string PrevCertificateID { get; set; }
+    public double PrevSurrAmt { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string CreatedBy { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    public string UpdatedBy { get; set; }
+}
+
+public class cCertificateAgent
+{
+    public int CertificateAgentID { get; set; }
+    public int MemberID { get; set; }
+    public string AgentID { get; set; }
+    public string AgentName { get; set; }
+    public string BranchName { get; set; }
+    public string AreaName { get; set; }
+    public string MainBranchName { get; set; }
+    public string CredamName { get; set; }
+    public string BranchID { get; set; }
+    public double CommSharing { get; set; }
+    public double CaseSharing { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string CreatedBy { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    public string UpdatedBy { get; set; }
+}
+
+public class cCertificateBeneficiary
+{
+    public int BeneficiaryID { get; set; }
+    public int MemberID { get; set; }
+    public string BeneficiaryName { get; set; }
+    public string BeneficiarySex { get; set; }
+    public string BeneficiaryPOB { get; set; }
+    public DateTime BeneficiaryDOB { get; set; }
+    public string BeneficiaryRelationship { get; set; }
+    public double BeneficiarySharing { get; set; }
+    public string Nationality { get; set; }
+    public string NationalityName { get; set; }
+    public string TrusteeInfo { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string CreatedBy { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    public string UpdatedBy { get; set; }
+}
+
+public class cCertificateQuestioner
+{
+    public int CertificateQuestionerID { get; set; }
+    public int MemberID { get; set; }
+    public int QuestionerID { get; set; }
+    public bool Answer { get; set; }
+    public string Explanation { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string CreatedBy { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    public string UpdatedBy { get; set; }
+}
+
+public class cCertificateCoverage
+{
+    public int CertificateCoverageID { get; set; }
+    public int MemberID { get; set; }
+    public string PlanID { get; set; }
+    public string PlanName { get; set; }
+    public string PlanStatus { get; set; }
+    public string PlanStatusName { get; set; }
+    public DateTime EffectiveDate { get; set; }
+    public DateTime TerminateDate { get; set; }
+    public int CoverageDuration { get; set; }
+    public string CoverageUnit { get; set; }
+    public string CoverageUnitName { get; set; }
+    public DateTime CoverageMaturity { get; set; }
+    public double FaceAmount { get; set; }
+    public double StandardPremiumAmount { get; set; }
+    public double StandardCommissionAmount { get; set; }
+    public double StandardTaxAmount { get; set; }
+    public double ExtraPremiumRate { get; set; }
+    public double ExtraPremiumAmount { get; set; }
+    public double ExtraCommissionAmount { get; set; }
+    public double ExtraTaxAmount { get; set; }
+    public double TotalPremium { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public string CreatedBy { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    public string UpdatedBy { get; set; }
+}
+
+public class cPolicyHistory
+{
+    public string CompanyName { get; set; }
+    public string ProductType { get; set; }
+    public double FaceAmount { get; set; }
+    public DateTime EffectiveDate { get; set; }
+}
+
+public class cDocument
+{
+    public int CertificateDocumentID { get; set; }
+    public bool IsComplete { get; set; }
+    public int DocumentID { get; set; }
+    public string DocumentName { get; set; }
+    public string DocumentPath { get; set; }
+    public string DocumentFileName { get; set; }
+    public DateTime DocumentCompletedDate { get; set; }
+    public int MemberID { get; set; }
+}
