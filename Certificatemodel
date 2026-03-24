@@ -1,0 +1,14 @@
+public class SaveCertificateRequest
+{
+    public bool pUseExistingInsuredID { get; set; }
+    public bool pUseExistingDebiturID { get; set; }
+    public cCertificate pocer { get; set; }
+    public cCertificateAgent oagt { get; set; }
+    public List<cCertificateBeneficiary> loben { get; set; }
+    public List<cCertificateQuestioner> loque { get; set; }
+    public List<cCertificateCoverage> locov { get; set; }
+    public List<cPolicyHistory> loPolH { get; set; }
+    public List<cPolicyHistory> loPolC { get; set; }
+    public List<cDocument> lodoc { get; set; }
+    public string pMode { get; set; } = "N";
+}
