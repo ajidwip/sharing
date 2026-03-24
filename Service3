@@ -1,0 +1,270 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+
+public class CertificateService
+{
+    private readonly string _connectionString;
+
+    public CertificateService(IConfiguration config)
+    {
+        _connectionString = config.GetConnectionString("DefaultConnection");
+    }
+
+    public bool SaveNewCertificate(
+        bool pUseExistingInsuredID,
+        bool pUseExistingDebiturID,
+        ref cCertificate pocer,
+        cCertificateAgent oagt,
+        List<cCertificateBeneficiary> loben,
+        List<cCertificateQuestioner> loque,
+        List<cCertificateCoverage> locov,
+        List<cPolicyHistory> loPolH,
+        List<cPolicyHistory> loPolC,
+        List<cDocument> lodoc,
+        string pMode = "N")
+    {
+        using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            conn.Open();
+            using (SqlTransaction tran = conn.BeginTransaction())
+            {
+                try
+                {
+                    // ================= MAIN =================
+                    using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate", conn, tran))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                        cmd.Parameters.Add(new SqlParameter("@CompanyID", SqlDbType.VarChar) { Value = pocer.CompanyID });
+                        cmd.Parameters.Add(new SqlParameter("@PolicyID", SqlDbType.VarChar) { Value = pocer.PolicyID });
+
+                        SqlParameter memberParam = new SqlParameter("@MemberID", SqlDbType.VarChar, 20)
+                        {
+                            Direction = ParameterDirection.InputOutput,
+                            Value = (object)pocer.MemberID ?? DBNull.Value
+                        };
+                        cmd.Parameters.Add(memberParam);
+
+                        SqlParameter certParam = new SqlParameter("@CertificateID", SqlDbType.VarChar, 20)
+                        {
+                            Direction = ParameterDirection.InputOutput,
+                            Value = (object)pocer.CertificateID ?? DBNull.Value
+                        };
+                        cmd.Parameters.Add(certParam);
+
+                        cmd.Parameters.Add(new SqlParameter("@InsuredID", SqlDbType.VarChar) { Value = pocer.InsuredID });
+                        cmd.Parameters.Add(new SqlParameter("@InsuredName", SqlDbType.VarChar) { Value = pocer.InsuredName });
+                        cmd.Parameters.Add(new SqlParameter("@InsuredDOB", SqlDbType.DateTime) { Value = pocer.InsuredDOB });
+                        cmd.Parameters.Add(new SqlParameter("@InsuredSex", SqlDbType.VarChar) { Value = pocer.InsuredSex });
+                        cmd.Parameters.Add(new SqlParameter("@DebiturID", SqlDbType.VarChar) { Value = pocer.DebiturID });
+                        cmd.Parameters.Add(new SqlParameter("@DebiturName", SqlDbType.VarChar) { Value = pocer.DebiturName });
+                        cmd.Parameters.Add(new SqlParameter("@DebiturDOB", SqlDbType.DateTime) { Value = pocer.DebiturDOB });
+                        cmd.Parameters.Add(new SqlParameter("@DebiturSex", SqlDbType.VarChar) { Value = pocer.DebiturSex });
+                        cmd.Parameters.Add(new SqlParameter("@CorrespondenceAddress", SqlDbType.VarChar) { Value = pocer.CorrespondenceAddress });
+                        cmd.Parameters.Add(new SqlParameter("@JoinIncome", SqlDbType.Bit) { Value = pocer.JoinIncome });
+                        cmd.Parameters.Add(new SqlParameter("@JoinCertificateID", SqlDbType.VarChar) { Value = pocer.JoinCertificateID });
+                        cmd.Parameters.Add(new SqlParameter("@ApplicationNo", SqlDbType.VarChar) { Value = pocer.ApplicationNo });
+                        cmd.Parameters.Add(new SqlParameter("@AgreementNo", SqlDbType.VarChar) { Value = pocer.AgreementNo });
+                        cmd.Parameters.Add(new SqlParameter("@BillingMode", SqlDbType.VarChar) { Value = pocer.BillingMode });
+                        cmd.Parameters.Add(new SqlParameter("@CurrencyID", SqlDbType.VarChar) { Value = pocer.CurrencyID });
+                        cmd.Parameters.Add(new SqlParameter("@AppReceiveDate", SqlDbType.DateTime) { Value = pocer.AppReceiveDate });
+                        cmd.Parameters.Add(new SqlParameter("@EffectiveDate", SqlDbType.DateTime) { Value = pocer.EffectiveDate });
+                        cmd.Parameters.Add(new SqlParameter("@ProductPackageID", SqlDbType.VarChar) { Value = pocer.ProductPackageID });
+                        cmd.Parameters.Add(new SqlParameter("@MonthlyInstallment", SqlDbType.Float) { Value = pocer.MonthlyInstallment });
+                        cmd.Parameters.Add(new SqlParameter("@LoanDuration", SqlDbType.Int) { Value = pocer.LoanDuration });
+                        cmd.Parameters.Add(new SqlParameter("@LoanMaturityDate", SqlDbType.DateTime) { Value = pocer.LoanMaturityDate });
+                        cmd.Parameters.Add(new SqlParameter("@LoanInterestRate", SqlDbType.Float) { Value = pocer.LoanInterestRate });
+                        cmd.Parameters.Add(new SqlParameter("@SalaryIncome", SqlDbType.VarChar) { Value = pocer.SalaryIncome });
+                        cmd.Parameters.Add(new SqlParameter("@SpouseIncome", SqlDbType.VarChar) { Value = pocer.SpouseIncome });
+                        cmd.Parameters.Add(new SqlParameter("@InvestmentIncome", SqlDbType.VarChar) { Value = pocer.InvestmentIncome });
+                        cmd.Parameters.Add(new SqlParameter("@BusinessIncome", SqlDbType.VarChar) { Value = pocer.BusinessIncome });
+                        cmd.Parameters.Add(new SqlParameter("@OtherIncome", SqlDbType.Float) { Value = pocer.OtherIncome });
+                        cmd.Parameters.Add(new SqlParameter("@AnnualNetIncome", SqlDbType.Float) { Value = pocer.AnnualNetIncome });
+                        cmd.Parameters.Add(new SqlParameter("@DependentNumber", SqlDbType.VarChar) { Value = pocer.DependentNumber });
+                        cmd.Parameters.Add(new SqlParameter("@Remark", SqlDbType.VarChar) { Value = pocer.Remark });
+                        cmd.Parameters.Add(new SqlParameter("@BasePlan", SqlDbType.VarChar) { Value = pocer.BasePlan });
+                        cmd.Parameters.Add(new SqlParameter("@InsuredHeight", SqlDbType.Decimal) { Value = pocer.InsuredHeight });
+                        cmd.Parameters.Add(new SqlParameter("@InsuredWeight", SqlDbType.Decimal) { Value = pocer.InsuredWeight });
+                        cmd.Parameters.Add(new SqlParameter("@BMIRate", SqlDbType.Decimal) { Value = pocer.BMIRate });
+                        cmd.Parameters.Add(new SqlParameter("@BMIHRisk", SqlDbType.VarChar) { Value = pocer.BMIHRisk });
+                        cmd.Parameters.Add(new SqlParameter("@ApplicationSignDate", SqlDbType.DateTime) { Value = pocer.ApplicationSignDate });
+                        cmd.Parameters.Add(new SqlParameter("@SmokerID", SqlDbType.VarChar) { Value = pocer.SmokerID });
+                        cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+                        cmd.Parameters.Add(new SqlParameter("@InforceDate", SqlDbType.DateTime) { Value = pocer.InforceDate });
+                        cmd.Parameters.Add(new SqlParameter("@PrevPolicyID", SqlDbType.VarChar) { Value = pocer.PrevCertificateID });
+                        cmd.Parameters.Add(new SqlParameter("@PrevSurrAmt", SqlDbType.VarChar) { Value = pocer.PrevSurrAmt });
+                        cmd.Parameters.Add(new SqlParameter("@IsUWPending", SqlDbType.Bit) { Value = pocer.HasUWPending });
+
+                        cmd.ExecuteNonQuery();
+
+                        pocer.MemberID = memberParam.Value?.ToString();
+                    }
+
+                    // ================= AGENT =================
+                    using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_agent", conn, tran))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                        cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                        cmd.Parameters.Add(new SqlParameter("@AgentID", SqlDbType.VarChar) { Value = oagt.AgentID });
+                        cmd.Parameters.Add(new SqlParameter("@BranchID", SqlDbType.VarChar) { Value = oagt.BranchID });
+                        cmd.Parameters.Add(new SqlParameter("@CommSharing", SqlDbType.Float) { Value = oagt.CommSharing });
+                        cmd.Parameters.Add(new SqlParameter("@CaseSharing", SqlDbType.Float) { Value = oagt.CaseSharing });
+                        cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // ================= BENEFICIARY =================
+                    foreach (cCertificateBeneficiary oben in loben)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_beneficiary", conn, tran))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                            cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                            cmd.Parameters.Add(new SqlParameter("@BeneficiaryName", SqlDbType.VarChar) { Value = oben.BeneficiaryName });
+                            cmd.Parameters.Add(new SqlParameter("@BeneficiarySex", SqlDbType.VarChar) { Value = oben.BeneficiarySex });
+                            cmd.Parameters.Add(new SqlParameter("@BeneficiaryPOB", SqlDbType.VarChar) { Value = oben.BeneficiaryPOB });
+                            cmd.Parameters.Add(new SqlParameter("@BeneficiaryDOB", SqlDbType.DateTime) { Value = oben.BeneficiaryDOB });
+                            cmd.Parameters.Add(new SqlParameter("@BeneficiaryRelationship", SqlDbType.VarChar) { Value = oben.BeneficiaryRelationship });
+                            cmd.Parameters.Add(new SqlParameter("@BeneficiarySharing", SqlDbType.Float) { Value = oben.BeneficiarySharing });
+                            cmd.Parameters.Add(new SqlParameter("@Nationality", SqlDbType.VarChar) { Value = oben.Nationality });
+                            cmd.Parameters.Add(new SqlParameter("@TrusteeInfo", SqlDbType.VarChar) { Value = oben.TrusteeInfo });
+                            cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // ================= COVERAGE =================
+                    foreach (cCertificateCoverage ocov in locov)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_coverage", conn, tran))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                            cmd.Parameters.Add(new SqlParameter("CertificateCoverageID", SqlDbType.Int) { Value = ocov.CertificateCoverageID });
+                            cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                            cmd.Parameters.Add(new SqlParameter("@PlanID", SqlDbType.VarChar) { Value = ocov.PlanID });
+                            cmd.Parameters.Add(new SqlParameter("@EffectiveDate", SqlDbType.DateTime) { Value = ocov.EffectiveDate });
+                            cmd.Parameters.Add(new SqlParameter("@CoverageDuration", SqlDbType.Int) { Value = ocov.CoverageDuration });
+                            cmd.Parameters.Add(new SqlParameter("@CoverageUnit", SqlDbType.VarChar) { Value = ocov.CoverageUnit });
+                            cmd.Parameters.Add(new SqlParameter("@CoverageMaturity", SqlDbType.DateTime) { Value = ocov.CoverageMaturity });
+                            cmd.Parameters.Add(new SqlParameter("@FaceAmount", SqlDbType.Float) { Value = ocov.FaceAmount });
+                            cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // ================= QUESTIONER =================
+                    foreach (cCertificateQuestioner oque in loque)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_questioner", conn, tran))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                            cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                            cmd.Parameters.Add(new SqlParameter("@QuestionerID", SqlDbType.Int) { Value = oque.QuestionerID });
+                            cmd.Parameters.Add(new SqlParameter("@Answer", SqlDbType.Bit) { Value = oque.Answer });
+                            cmd.Parameters.Add(new SqlParameter("@Explanation", SqlDbType.VarChar) { Value = oque.Explanation });
+                            cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // ================= POLICY HISTORY =================
+                    foreach (cPolicyHistory opolh in loPolH)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_pre_policy", conn, tran))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                            cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                            cmd.Parameters.Add(new SqlParameter("@CompanyName", SqlDbType.VarChar) { Value = opolh.CompanyName });
+                            cmd.Parameters.Add(new SqlParameter("@ProductName", SqlDbType.VarChar) { Value = opolh.ProductType });
+                            cmd.Parameters.Add(new SqlParameter("@SumInsured", SqlDbType.Float) { Value = opolh.FaceAmount });
+                            cmd.Parameters.Add(new SqlParameter("@IssueDate", SqlDbType.Date) { Value = opolh.EffectiveDate });
+                            cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    foreach (cPolicyHistory opolh in loPolC)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_pre_claim", conn, tran))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add(new SqlParameter("@SaveMode", SqlDbType.VarChar) { Value = pMode });
+                            cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                            cmd.Parameters.Add(new SqlParameter("@CompanyName", SqlDbType.VarChar) { Value = opolh.CompanyName });
+                            cmd.Parameters.Add(new SqlParameter("@ProductName", SqlDbType.VarChar) { Value = opolh.ProductType });
+                            cmd.Parameters.Add(new SqlParameter("@SumInsured", SqlDbType.Float) { Value = opolh.FaceAmount });
+                            cmd.Parameters.Add(new SqlParameter("@IssueDate", SqlDbType.Date) { Value = opolh.EffectiveDate });
+                            cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // ================= DOCUMENT =================
+                    foreach (cDocument oDoc in lodoc)
+                    {
+                        using (SqlCommand cmd = new SqlCommand("usp_save_tcertificate_document", conn, tran))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                            cmd.Parameters.Add(new SqlParameter("@IsCompleted", SqlDbType.VarChar) { Value = oDoc.IsComplete });
+                            cmd.Parameters.Add(new SqlParameter("@DocumentID", SqlDbType.VarChar) { Value = oDoc.DocumentID });
+                            cmd.Parameters.Add(new SqlParameter("@DocumentPath", SqlDbType.VarChar) { Value = oDoc.DocumentPath });
+                            cmd.Parameters.Add(new SqlParameter("@DocumentFile", SqlDbType.VarChar) { Value = oDoc.DocumentFileName });
+                            cmd.Parameters.Add(new SqlParameter("@CompletedDate", SqlDbType.Date) { Value = oDoc.DocumentCompletedDate });
+                            cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar)
+                            {
+                                Value = string.IsNullOrEmpty(oDoc.DocumentFileName) ? "" : pocer.UpdatedBy
+                            });
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    // ================= UPDATE POLICY =================
+                    using (SqlCommand cmd = new SqlCommand("usp_update_previous_policy", conn, tran))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add(new SqlParameter("@MemberID", SqlDbType.Int) { Value = pocer.MemberID });
+                        cmd.Parameters.Add(new SqlParameter("@InsuredID", SqlDbType.VarChar) { Value = pocer.InsuredID });
+                        cmd.Parameters.Add(new SqlParameter("@CurrencyID", SqlDbType.VarChar) { Value = pocer.CurrencyID });
+                        cmd.Parameters.Add(new SqlParameter("@PolicyID", SqlDbType.VarChar) { Value = pocer.PolicyID });
+                        cmd.Parameters.Add(new SqlParameter("@ProcessBy", SqlDbType.VarChar) { Value = pocer.UpdatedBy });
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    tran.Commit();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    tran.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
+}
