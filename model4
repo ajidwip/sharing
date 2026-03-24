@@ -1,0 +1,196 @@
+Public Class cCertificate
+
+#Region "Variables"
+
+    Private _CompanyID As String
+    Private _MemberID As Integer
+    Private _PolicyID As String
+    Private _CertificateID As String
+    Private _CertificateStatus As String
+    Private _UnderwritingStatus As String
+    Private _HasAdminPending As Boolean
+    Private _HasUWPending As Boolean
+    Private _InsuredID As String
+    Private _AlternateID As String
+    Private _InsuredName As String
+    Private _InsuredDOB As Date
+    Private _InsuredSex As String
+    Private _InsuredAge As Integer
+    Private _DebiturID As String
+    Private _DebiturName As String
+    Private _DebiturDOB As Date
+    Private _DebiturSex As String
+    Private _DebiturAge As Integer
+    Private _CorrespondenceAddress As String
+    Private _JoinIncome As Boolean
+    Private _JoinCertificateID As String
+    Private _ApplicationNo As String
+    Private _AgreementNo As String
+    Private _ContractID As String
+    Private _BillingMode As String
+    Private _CurrencyID As String
+    Private _AppReceiveDate As Date
+    Private _EffectiveDate As Date
+    Private _InforceDate As Date
+    Private _InforceBy As String
+    Private _ApproveDate As Date
+    Private _ApproveBy As String
+    Private _TerminateDate As Date
+    Private _TerminateBy As String
+    Private _MedicalType As String
+    Private _ProductPackageID As String
+    Private _BasePlan As String
+    Private _BillToDate As Date
+    Private _PaidToDate As Date
+    Private _MonthlyInstallment As Double
+    Private _LoanDuration As Integer
+    Private _LoanMaturityDate As Date
+    Private _LoanInterestRate As Double
+    Private _SalaryIncome As String
+    Private _SpouseIncome As String
+    Private _InvestmentIncome As String
+    Private _BusinessIncome As String
+    Private _OtherIncome As Double
+    Private _AnnualNetIncome As Double
+    Private _DependentNumber As Integer
+    Private _Remark As String
+    Private _TwoYearsSAR As Double
+    Private _TotalSAR As Double
+    Private _PremiumAmount As Double
+    Private _PremiumNettAmount As Double
+    Private _PremiumTaxAmount As Double
+    Private _PremiumTaxRate As Double
+    Private _IRACommission As Double
+
+    Private _InsuredHeight As Decimal
+    Private _InsuredWeight As Decimal
+    Private _BMIRate As Decimal
+    Private _BMIHRisk As String
+    Private _ApplicationSignDate As Date
+    Private _ProductPackageName As String
+    Private _SmokerID As String
+
+    Private _ExtPremAmount As Double
+    Private _ExtPremAmountNett As Double
+    Private _ExtMortalityRating As String
+    Private _TotalPremiunAmount As Double
+
+    Private _PrevCertificateID As String
+    Private _PrevSurrAmt As Double
+
+
+    Private _CreatedDate As Date
+    Private _CreatedBy As String
+    Private _UpdatedDate As Date
+    Private _UpdatedBy As String
+end class
+
+Public Class cCertificateAgent
+
+    Private _CertificateAgentID As Integer
+    Private _MemberID As Integer
+    Private _AgentID As String
+    Private _AgentName As String
+    Private _BranchName As String
+    Private _AreaName As String
+    Private _MainBranchName As String
+    Private _CredamName As String
+    Private _BranchID As String
+    Private _CommSharing As Double
+    Private _CaseSharing As Double
+
+    Private _CreatedDate As Date
+    Private _CreatedBy As String
+    Private _UpdatedDate As Date
+    Private _UpdatedBy As String
+end class
+
+Public Class cCertificateBeneficiary
+
+#Region "Variables"
+    Private _BeneficiaryID As Integer
+    Private _MemberID As Integer
+    Private _BeneficiaryName As String
+    Private _BeneficiarySex As String
+    Private _BeneficiaryPOB As String
+    Private _BeneficiaryDOB As Date
+    Private _BeneficiaryRelationship As String
+    Private _BeneficiarySharing As Double
+    Private _Nationality As String
+    Private _NationalityName As String
+    Private _TrusteeInfo As String
+
+    Private _CreatedDate As Date
+    Private _CreatedBy As String
+    Private _UpdatedDate As Date
+    Private _UpdatedBy As String
+end class
+
+Public Class cCertificateQuestioner
+
+#Region "Variables"
+    Private _CertificateQuestionerID As Integer
+    Private _MemberID As Integer
+    Private _QuestionerID As Integer
+    Private _Answer As Boolean
+    Private _Explanation As String
+
+    Private _CreatedDate As Date
+    Private _CreatedBy As String
+    Private _UpdatedDate As Date
+    Private _UpdatedBy As String
+end class
+
+
+Public Class cCertificateCoverage
+
+#Region "Variables"
+    Private _CertificateCoverageID As Integer
+    Private _MemberID As Integer
+    Private _PlanID As String
+    Private _PlanName As String
+    Private _PlanStatus As String
+    Private _PlanStatusName As String
+    Private _EffectiveDate As Date
+    Private _TerminateDate As Date
+    Private _CoverageDuration As Integer
+    Private _CoverageUnit As String
+    Private _CoverageUnitName As String
+    Private _CoverageMaturity As Date
+    Private _FaceAmount As Double
+    Private _StandardPremiumAmount As Double
+    Private _StandardCommissionAmount As Double
+    Private _StandardTaxAmount As Double
+    Private _ExtraPremiumRate As Double
+    Private _ExtraPremiumAmount As Double
+    Private _ExtraCommissionAmount As Double
+    Private _ExtraTaxAmount As Double
+    Private _TotalPremium As Double
+
+    Private _CreatedDate As Date
+    Private _CreatedBy As String
+    Private _UpdatedDate As Date
+    Private _UpdatedBy As String
+end class
+
+Public Class cPolicyHistory
+
+#Region "Variables"
+    Private _CompanyName As String
+    Private _ProductType As String
+    Private _FaceAmount As Double
+    Private _EffectiveDate As Date
+end class
+
+Public Class cDocument
+
+#Region "Variables"
+    Private _CertificateDocumentID As Integer
+    Private _IsComplete As Boolean
+    Private _DocumentID As Integer
+    Private _DocumentName As String
+    Private _DocumentPath As String
+    Private _DocumentFileName As String
+    Private _DocumentCompletedDate As Date
+    Private _MemberID As Integer
+end class
